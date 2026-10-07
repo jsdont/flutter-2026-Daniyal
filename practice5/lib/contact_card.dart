@@ -15,7 +15,6 @@ class ContactCard extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        // Without Expanded: overflowed by 172 px on the right (Android, 411 dp).
         child: Row(
           children: [
             Stack(
