@@ -1,11 +1,11 @@
 {
-    "name": "study_meet",
-    "short_name": "study_meet",
+    "name": "Study Meet",
+    "short_name": "Study Meet",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Find and join student study sessions.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
