@@ -1,46 +1,57 @@
 import 'package:flutter/material.dart';
 
 import 'cart_badge.dart';
-import 'main.dart';
+import 'models/book.dart';
+import 'widgets/book_row.dart';
 
-class BooksScreen extends StatelessWidget {
-  const BooksScreen({
-    super.key,
-    required this.cart,
-    required this.total,
-    required this.onAdd,
-  });
+class BooksScreen extends StatefulWidget {
+  const BooksScreen({super.key});
 
-  final List<Book> cart;
-  final int total;
-  final void Function(Book) onAdd;
+  @override
+  State<BooksScreen> createState() => _BooksScreenState();
+}
+
+class _BooksScreenState extends State<BooksScreen> {
+  String _search = '';
 
   @override
   Widget build(BuildContext context) {
     debugPrint('BooksScreen build');
+    final visibleBooks = books.where((book) {
+      return book.title.toLowerCase().contains(_search) ||
+          book.author.toLowerCase().contains(_search);
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Books'),
-        actions: [CartBadge(count: cart.length, total: total)],
+        actions: const [CartBadge()],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(64),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: 'Search books',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() => _search = value.trim().toLowerCase());
+              },
+            ),
+          ),
+        ),
       ),
-      body: ListView(
-        children: books.map((book) {
-          debugPrint('row ${book.title}');
-
-          return ListTile(
-            title: Text(book.title),
-            subtitle: Text('${book.author}\n${book.price} ₸'),
-            isThreeLine: true,
-            trailing: cart.contains(book)
-                ? const Text('Added')
-                : OutlinedButton(
-                    onPressed: () => onAdd(book),
-                    child: const Text('Add'),
-                  ),
-          );
-        }).toList(),
-      ),
+      body: visibleBooks.isEmpty
+          ? const Center(child: Text('No books found'))
+          : ListView(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              children: [
+                for (final book in visibleBooks)
+                  BookRow(key: ValueKey(book), book: book),
+              ],
+            ),
     );
   }
 }
